@@ -63,7 +63,7 @@ public abstract class SynthEngine implements Runnable {
 	private void fixedLoop() {
 		final double intervalFrequency = 60.0;
 		final double intervalLength = 1000000000 / intervalFrequency;
-		final int maxUpdateEndrunace = 5;
+		final int maxUpdateEndurance = 5;
 		double lastUpdateTime = System.nanoTime();
 		double lastRenderTime = System.nanoTime();
 
