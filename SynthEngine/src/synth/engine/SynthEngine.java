@@ -1,7 +1,7 @@
 // -CREDITS-
 // Gameloops:
 // 		"http://www.java-gaming.org/index.php?topic=24220.0" by Eli Delventhal
-// 		Gave me extra information about interpolation and more
+// 		Gave me extra information about interpolation and more (Interpolation will come in the future)
 
 package synth.engine;
 
@@ -12,7 +12,8 @@ import javax.swing.JFrame;
 
 public abstract class SynthEngine implements Runnable {
 
-	private boolean loopRunning = false, physicsLoop = false, gamePaused = false;
+	private boolean loopRunning = false, physicsLoop = true, gamePaused = false;
+	private Thread thread;
 	protected JFrame frame;
 	protected Renderer renderer;
 	public static boolean RENDER_DEBUG = true;
@@ -20,10 +21,16 @@ public abstract class SynthEngine implements Runnable {
 	public static int FRAME_COUNT = 0;
 
 	public SynthEngine(String gameTitle, Dimension canvasSize) {
+		thread = new Thread(this);
 		frame = new JFrame(gameTitle);
 		renderer = new Renderer(Color.black, canvasSize);
+		frame.add(renderer);
 		frame.pack();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		loopRunning = true;
+		thread.start();
 	}
 
 	private void physicsLoop() {
@@ -33,29 +40,26 @@ public abstract class SynthEngine implements Runnable {
 		double lastFPSTime = 0;
 
 		while (loopRunning) {
-			if (physicsLoop) {
-				long now = System.nanoTime();
-				long updateLength = now - lastLoopTime;
-				lastLoopTime = now;
-				double delta = updateLength / (double) optimalTime;
-
-				lastFPSTime += updateLength;
-				FPS++;
-
-				if (lastFPSTime >= 1000000000) {
-					System.out.println("(FPS: " + FPS + ")");
-					lastFPSTime = 0;
-					FPS = 0;
-				}
-
-				tick(delta);
-
-				renderer.update();
-				try {
-					Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / 1000000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			long now = System.nanoTime();
+			long updateLength = now - lastLoopTime;
+			lastLoopTime = now;
+			double delta = updateLength / (double) optimalTime;
+			
+			lastFPSTime += updateLength;
+			FPS++;
+			
+			if (lastFPSTime >= 1000000000) {
+				lastFPSTime = 0;
+				FPS = 0;
+			}
+			
+			tick(delta);
+			
+			renderer.update();
+			try {
+				Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / 1000000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -63,7 +67,7 @@ public abstract class SynthEngine implements Runnable {
 	private void fixedLoop() {
 		final double intervalFrequency = 60.0;
 		final double intervalLength = 1000000000 / intervalFrequency;
-		final int maxUpdateEndrunace = 5;
+		final int maxUpdateEndrunace = 2;
 		double lastUpdateTime = System.nanoTime();
 		double lastRenderTime = System.nanoTime();
 
@@ -116,19 +120,15 @@ public abstract class SynthEngine implements Runnable {
 
 	@Override
 	public void run() {
-		Thread loop = new Thread() {
-			public void run() {
-				if (physicsLoop) {					
-					physicsLoop();
-				} else {					
-					fixedLoop();				
-				}
-			}
-		};
-		loop.start();
+		if (physicsLoop) {					
+			physicsLoop();
+		} else {					
+			fixedLoop();				
+		}
 	}
 
 	public void tick(double delta) {
-		
+		System.out.println(delta);
 	}
+	
 }

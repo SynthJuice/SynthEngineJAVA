@@ -1,4 +1,5 @@
-Implement proper entites 	: ONGOING
-Implement entity physics 	: SCHEDULED
-Implement entity collision	: SCHEDULED
-Implement textures			: ONGOING
+Proper entites 		: ONGOING
+Entity physics 		: SCHEDULED
+Entity collision	: SCHEDULED
+Textures			: ONGOING
+Custom close op		: SCHEDULED

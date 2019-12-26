@@ -11,5 +11,9 @@ public class SynthGame extends SynthEngine {
 	public SynthGame() {
 		super("SynthEngine DEV0.1", SIZE);
 	}
+	
+	public static void main(String[] args) {
+		new SynthGame();
+	}
 
 }

@@ -22,5 +22,13 @@ public class EntityManager {
 			entityList.get(i).render(g);
 		}
 	}
+	
+	public void removeEntity(Entity entity) { // Add more shit
+		entityList.remove(entity);
+	}
+	
+	public void removeEntity(int ID) { // Same here
+		entityList.remove(ID);
+	}
 
 }
