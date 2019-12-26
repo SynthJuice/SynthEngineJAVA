@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 
 public abstract class SynthEngine implements Runnable {
 
-	private boolean loopRunning = false, physicsLoop = true, gamePaused = false;
+	private boolean loopRunning = false, physicsLoop = false, gamePaused = false;
 	private Thread thread;
 	protected JFrame frame;
 	protected Renderer renderer;
@@ -49,6 +49,7 @@ public abstract class SynthEngine implements Runnable {
 			FPS++;
 			
 			if (lastFPSTime >= 1000000000) {
+				OutputManager.updateDate();
 				lastFPSTime = 0;
 				FPS = 0;
 			}
@@ -57,7 +58,7 @@ public abstract class SynthEngine implements Runnable {
 			
 			renderer.update();
 			try {
-				Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / 1000000);
+				Thread.sleep((lastLoopTime - System.nanoTime() + optimalTime) / 1000000); // Fix error : "timeout value is negative"
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -98,6 +99,7 @@ public abstract class SynthEngine implements Runnable {
 
 				int thisSecond = (int) (lastUpdateTime / 1000000000);
 				if (thisSecond > lastSecondTime) {
+					OutputManager.updateDate();
 					FPS = FRAME_COUNT;
 					FRAME_COUNT = 0;
 					lastSecondTime = thisSecond;
@@ -128,7 +130,7 @@ public abstract class SynthEngine implements Runnable {
 	}
 
 	public void tick(double delta) {
-		System.out.println(delta);
+		OutputManager.println("yoink " + delta, OutputType.debug);
 	}
 	
 }

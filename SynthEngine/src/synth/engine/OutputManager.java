@@ -1,3 +1,7 @@
+// -TODO-
+// Add a general logger
+// Add a crash logger
+
 package synth.engine;
 
 import java.text.SimpleDateFormat;
@@ -10,7 +14,7 @@ public class OutputManager {
 	
 	public static void println(String message, OutputType messageType) {
 		if (messageType.allow) {			
-			System.out.println("[" + date + "]{" + messageType.toString() + "} " + message);
+			System.out.println("[" + date + "] {" + new Exception().getStackTrace()[0].getClassName() + "} (" + messageType.toString() + ") | " + message);
 		}
 	}
 	
